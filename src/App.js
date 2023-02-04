@@ -7,12 +7,14 @@ import React from 'react';
 import Cart from './pages/Cart';
 
 function App() {
+  const [searchValue, setSearchValue] = React.useState('');
+
   return (
     <div className="wrapper">
-      <Header />
+      <Header searchValue={searchValue} setSearchValue={setSearchValue} />
       <div className="content">
         <Routes>
-          <Route exact path="/" element={<Home />} />
+          <Route exact path="/" element={<Home searchValue={searchValue} />} />
           <Route exact path="*" element={<NotFound />} />
           <Route path="/cart" element={<Cart />} />
         </Routes>
