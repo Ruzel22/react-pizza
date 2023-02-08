@@ -3,28 +3,36 @@ import Categories from '../components/Categories';
 import Sort from '../components/Sort';
 import PizzaBlock from '../components/PizzaBlock/';
 import Skeleton from '../components/PizzaBlock/Skeleton';
+import axios from 'axios';
+import { SearchContext } from '../App';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { setActiveCategory } from '../redux/slices/filterSlice';
 
-const Home = ({ searchValue }) => {
+const Home = () => {
+  const activeCategory = useSelector((state) => state.filter.activeCategory);
+  const activeSort = useSelector((state) => state.filter.sort);
+  const dispatch = useDispatch();
+  const { searchValue } = React.useContext(SearchContext);
   const [items, setItems] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
-  const [activeCategory, setActiveCategory] = React.useState(0);
-  const [activeSort, setActiveSort] = React.useState({
-    name: 'популярности ↓',
-    sortProperty: '-rating',
-  });
+  // const [activeCategory, setActiveCategory] = React.useState(0);
+  // const [activeSort, setActiveSort] = React.useState({
+  //   name: 'популярности ↓',
+  //   sortProperty: '-rating',
+  // });
 
   React.useEffect(() => {
-    setIsLoading(true);
-    fetch(
-      `https://63da6c5c2af48a60a7cd6fb2.mockapi.io/pizzas?${
-        activeCategory > 0 ? `category=${activeCategory}` : ''
-      }&sortBy=${activeSort.sortProperty.replace('-', '')}&order=${
-        activeSort.sortProperty.includes('-') ? 'asc' : 'desc'
-      }`,
-    )
-      .then((res) => res.json())
-      .then((arr) => {
-        setItems(arr);
+    axios
+      .get(
+        `https://63da6c5c2af48a60a7cd6fb2.mockapi.io/pizzas?${
+          activeCategory > 0 ? `category=${activeCategory}` : ''
+        }&sortBy=${activeSort.sortProperty.replace('-', '')}&order=${
+          activeSort.sortProperty.includes('-') ? 'asc' : 'desc'
+        }`,
+      )
+      .then((response) => {
+        setItems(response.data);
         setIsLoading(false);
       });
   }, [activeCategory, activeSort]);
@@ -35,12 +43,9 @@ const Home = ({ searchValue }) => {
         <div className="content__top">
           <Categories
             activeCategory={activeCategory}
-            onChangeCategory={(i) => setActiveCategory(i)}
+            onChangeCategory={(i) => dispatch(setActiveCategory(i))}
           />
-          <Sort
-            activeSort={activeSort}
-            onChangeSort={(sortProperty) => setActiveSort(sortProperty)}
-          />
+          <Sort />
         </div>
         <h2 className="content__title">Все пиццы</h2>
         <div className="content__items">
