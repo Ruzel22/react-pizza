@@ -1,9 +1,16 @@
 import React from 'react';
+import 
+
 
 function PizzaBlock({ title, price, imageUrl, sizes, types }) {
   const typeNames = ['тонкое', 'традиционное'];
   const [activeSize, setActiveSize] = React.useState(0);
   const [activeType, setActiveType] = React.useState(0);
+
+  const onClickAdd = () => {
+
+  }
+
 
   return (
     <div className="pizza-block-container">
@@ -34,7 +41,7 @@ function PizzaBlock({ title, price, imageUrl, sizes, types }) {
         </div>
         <div className="pizza-block__bottom">
           <div className="pizza-block__price">от {price} ₽</div>
-          <button className="button button--outline button--add">
+          <button onClick = {onClickAdd} className="button button--outline button--add">
             <svg
               width="12"
               height="12"
